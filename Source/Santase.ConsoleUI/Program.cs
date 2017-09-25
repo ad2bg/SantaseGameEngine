@@ -7,9 +7,11 @@
     {
         public static void Main()
         {
-            var card = new Card(CardSuit.Heart, CardType.Ace);
-            var card2 = new Card(CardSuit.Heart, CardType.Ace);
-            Console.WriteLine(card == card2);
+            var deck = new Deck();
+            for (int i = 0; i < 24; i++)
+            {
+                Console.WriteLine(deck.GetNextCard());
+            }
 
 
             Console.ReadLine();
