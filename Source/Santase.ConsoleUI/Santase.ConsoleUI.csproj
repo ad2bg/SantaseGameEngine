@@ -48,5 +48,11 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Santase.Logic\Santase.Logic.csproj">
+      <Project>{81766101-bab1-4a35-8a46-3c8a590d11dc}</Project>
+      <Name>Santase.Logic</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
