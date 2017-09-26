@@ -1,4 +1,4 @@
-﻿namespace Santase.Logic.Extension
+﻿namespace Santase.Logic.Extensions
 {
     using System;
     using System.Collections.Generic;

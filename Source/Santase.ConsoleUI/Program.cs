@@ -1,19 +1,20 @@
 ﻿namespace Santase.ConsoleUI
 {
     using System;
-    using Santase.Logic.Cards;
+    using Santase.Logic;
 
     public static class Program
     {
         public static void Main()
         {
-            var deck = new Deck();
-            for (int i = 0; i < 24; i++)
-            {
-                Console.WriteLine(deck.GetNextCard());
-            }
+            ISantaseGame game = new SantaseGame();
+            game.Start();
 
 
+            Console.WriteLine("Game over!");
+            Console.WriteLine("{0} - {1}",
+                game.FirstPlayerTotalPoints,
+                game.SecondPlayerTotalPoints);
             Console.ReadLine();
         }
     }

@@ -4,7 +4,7 @@
     using System.Linq;
 
     using Santase.Logic.Cards.Contracts;
-    using Santase.Logic.Extension;
+    using Santase.Logic.Extensions;
 
     public class Deck : IDeck
     {

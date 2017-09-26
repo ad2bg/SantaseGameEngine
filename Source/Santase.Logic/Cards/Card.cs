@@ -2,15 +2,14 @@
 {
     public class Card
     {
+        public CardSuit Suit { get; private set; }
+        public CardType Type { get; private set; }
+
         public Card(CardSuit suit, CardType type)
         {
             this.Suit = suit;
             this.Type = type;
         }
-
-        public CardSuit Suit { get; private set; }
-
-        public CardType Type { get; private set; }
 
         public override bool Equals(object obj)
         {
