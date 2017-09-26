@@ -12,9 +12,10 @@
 
 
             Console.WriteLine("Game over!");
-            Console.WriteLine("{0} - {1}",
+            Console.WriteLine("{0} - {1} in {2} rounds",
                 game.FirstPlayerTotalPoints,
-                game.SecondPlayerTotalPoints);
+                game.SecondPlayerTotalPoints,
+                game.RoundsPlayed);
             Console.ReadLine();
         }
     }

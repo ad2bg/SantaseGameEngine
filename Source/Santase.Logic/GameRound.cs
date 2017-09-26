@@ -1,20 +1,22 @@
 ﻿namespace Santase.Logic
 {
+    using System;
+
     public class GameRound : IGameRound
     {
-        public int FirstPlayerPoints => throw new System.NotImplementedException();
+        public int FirstPlayerPoints => throw new NotImplementedException();
 
-        public int SecondPlayerPoints => throw new System.NotImplementedException();
+        public int SecondPlayerPoints => throw new NotImplementedException();
 
-        public bool FirstPlayerHasHand => throw new System.NotImplementedException();
+        public bool FirstPlayerHasHand => throw new NotImplementedException();
 
-        public bool SecondPlayerHasHand => throw new System.NotImplementedException();
+        public bool SecondPlayerHasHand => throw new NotImplementedException();
 
-        public PlayerPosition ClosedByPlayer => throw new System.NotImplementedException();
+        public PlayerPosition ClosedByPlayer => throw new NotImplementedException();
 
         public void Start()
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
     }
 }
