@@ -46,6 +46,8 @@
     <Compile Include="Cards\CardType.cs" />
     <Compile Include="Cards\Contracts\IDeck.cs" />
     <Compile Include="Cards\Deck.cs" />
+    <Compile Include="Extension\EnumerableExtensions.cs" />
+    <Compile Include="Extension\RandomProvider.cs" />
     <Compile Include="InternalGameException.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

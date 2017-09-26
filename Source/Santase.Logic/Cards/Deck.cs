@@ -1,9 +1,10 @@
 ﻿namespace Santase.Logic.Cards
 {
-    using System.Collections;
     using System.Collections.Generic;
+    using System.Linq;
 
     using Santase.Logic.Cards.Contracts;
+    using Santase.Logic.Extension;
 
     public class Deck : IDeck
     {
@@ -23,8 +24,10 @@
                 }
             }
 
+            // Shuffle the cards
+            this.listOfCards = listOfCards.Shuffle().ToList();
 
-            // TODO: Shuffle
+            // Set the trump card
             this.trumpCard = this.listOfCards[0];
         }
 
