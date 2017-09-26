@@ -4,9 +4,14 @@
     {
         void Start();
 
-        int TotalPointsWonByFirstPlayer { get; }
+        int FirstPlayerPoints { get; }
 
-        int TotalPointsWonBySecondPlayer { get; }
+        int SecondPlayerPoints { get; }
 
+        bool FirstPlayerHasHand { get; }
+
+        bool SecondPlayerHasHand { get; }
+
+        PlayerPosition ClosedByPlayer { get; }
     }
 }

@@ -32,8 +32,64 @@ namespace Santase.Logic
         {
             IGameRound round = new GameRound();
             round.Start();
-            this.firstPlayerTotalPoints += round.TotalPointsWonByFirstPlayer;
-            this.secondPlayerTotalPoints += round.TotalPointsWonBySecondPlayer;
+
+            UpdatePoints(round);
+        }
+
+        private void UpdatePoints(IGameRound round)
+        {
+            if (round.ClosedByPlayer == PlayerPosition.FirstPlayer)
+            {
+                if (round.FirstPlayerPoints<66)
+                {
+                    this.secondPlayerTotalPoints += 3;
+                    return;
+                }
+            }
+
+            if (round.ClosedByPlayer == PlayerPosition.SecondPlayer)
+            {
+                if (round.SecondPlayerPoints < 66)
+                {
+                    this.firstPlayerTotalPoints += 3;
+                    return;
+                }
+            }
+
+            if (round.FirstPlayerPoints > round.SecondPlayerPoints)
+            {
+                if (round.SecondPlayerPoints >= 33)
+                {
+                    this.firstPlayerTotalPoints += 1;
+                }
+                else if (round.SecondPlayerHasHand)
+                {
+                    this.firstPlayerTotalPoints += 2;
+                }
+                else
+                {
+                    this.firstPlayerTotalPoints += 3;
+                }
+            }
+            else if (round.SecondPlayerPoints > round.FirstPlayerPoints)
+            {
+                if (round.FirstPlayerPoints >= 33)
+                {
+                    this.secondPlayerTotalPoints += 1;
+                }
+                else if (round.FirstPlayerHasHand)
+                {
+                    this.secondPlayerTotalPoints += 2;
+                }
+                else
+                {
+                    this.secondPlayerTotalPoints += 3;
+                }
+            }
+            else
+            {
+                // Equal points from the round
+            }
         }
 
         private bool IsGameOver()
