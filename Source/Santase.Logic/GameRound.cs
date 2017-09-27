@@ -34,7 +34,7 @@
 
         public bool SecondPlayerHasHand => this.secondPlayerCollectedCards.Count > 0;
 
-        public PlayerPosition ClosedByPlayer => throw new NotImplementedException();
+        public PlayerPosition ClosedByPlayer => this.gameClosedBy;
 
         public PlayerPosition LastHandInPlayer => this.firstToPlay;
 
@@ -73,10 +73,13 @@
 
         private void PlayHand()
         {
-            IGameHand hand = new GameHand();
+            IGameHand hand = new GameHand(
+                this.firstToPlay,
+                this.firstPlayer,
+                this.secondPlayer,
+                this.state);
+
             hand.Start();
-
-
 
             // Update points
             this.UpdatePoints(hand);
@@ -99,9 +102,10 @@
             this.secondPlayerCards.Remove(hand.SecondPlayerCard);
             this.DrawNewCards();
 
-
+            // Switch states as necessary
             this.state.PlayHand(this.deck.CardsLeft);
 
+            // Close the game if needed
             if (hand.GameClosedBy == PlayerPosition.FirstPlayer ||
                 hand.GameClosedBy == PlayerPosition.SecondPlayer)
             {
