@@ -5,6 +5,7 @@
     using Santase.Logic.Cards;
     using Santase.Logic.Cards.Contracts;
     using Santase.Logic.Players;
+    using Santase.Logic.RoundStates;
 
     public class GameRound : IGameRound
     {
@@ -18,7 +19,9 @@
         private IList<Card> firstPlayerCollectedCards;
         private IList<Card> secondPlayerCollectedCards;
 
-        private PlayerPosition whoWillPlayFirst;
+        private PlayerPosition firstToPlay;
+
+        private BaseRoundState state;
 
 
         public int FirstPlayerPoints => this.firstPlayerPoints;
@@ -31,17 +34,23 @@
 
         public PlayerPosition ClosedByPlayer => throw new NotImplementedException();
 
-        public GameRound(IPlayer firstPlayer, IPlayer secondPlayer, PlayerPosition whoWillPlayFirst)
+        public GameRound(IPlayer firstPlayer, IPlayer secondPlayer, PlayerPosition firstToPlay)
         {
             this.deck = new Deck();
+
             this.firstPlayer = firstPlayer;
             this.secondPlayer = secondPlayer;
+
             this.firstPlayerPoints = 0;
             this.secondPlayerPoints = 0;
+
             this.firstPlayerCards = new List<Card>();
             this.secondPlayerCards = new List<Card>();
+
             this.firstPlayerCollectedCards = new List<Card>();
             this.secondPlayerCollectedCards = new List<Card>();
+
+            this.firstToPlay = firstToPlay;
         }
 
 
@@ -61,6 +70,7 @@
             // TODO: Update points
             // TODO: Add one more card to both players
             // TODO: Update collected cards
+            this.firstToPlay = hand.Winner;
         }
 
         private void DealFirstCards()
@@ -90,6 +100,9 @@
                 this.secondPlayerCards.Count == 0;
         }
 
-
+        public void SetState(BaseRoundState newState)
+        {
+            this.state = newState;
+        }
     }
 }

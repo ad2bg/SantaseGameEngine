@@ -2,6 +2,8 @@
 {
     internal interface IGameHand
     {
+        PlayerPosition Winner { get; }
+
         void Start();
     }
 }

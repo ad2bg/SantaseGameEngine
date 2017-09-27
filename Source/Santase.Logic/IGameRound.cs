@@ -1,8 +1,12 @@
 ﻿namespace Santase.Logic
 {
+    using Santase.Logic.RoundStates;
+
     public interface IGameRound
     {
         void Start();
+
+        void SetState(BaseRoundState newState);
 
         int FirstPlayerPoints { get; }
 

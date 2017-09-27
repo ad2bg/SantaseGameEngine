@@ -9,7 +9,8 @@
         {
             ISantaseGame game = new SantaseGame(
                 new ConsolePlayer(6,10),
-                new ConsolePlayer(10,10));
+                new ConsolePlayer(10,10),
+                PlayerPosition.FirstPlayer);
 
             game.Start();
 
