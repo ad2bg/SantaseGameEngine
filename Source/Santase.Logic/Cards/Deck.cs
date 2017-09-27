@@ -36,6 +36,8 @@
             get { return this.trumpCard; }
         }
 
+        public int CardsLeft => this.listOfCards.Count;
+
         public void ChangeTrumpCard(Card newCard)
         {
             this.trumpCard = newCard;

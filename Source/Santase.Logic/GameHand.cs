@@ -19,6 +19,8 @@ namespace Santase.Logic
 
         public Announce SecondPlayerAnnounce => throw new System.NotImplementedException();
 
+        public PlayerPosition GameClosedBy => throw new System.NotImplementedException();
+
         public void Start()
         {
             throw new System.NotImplementedException();

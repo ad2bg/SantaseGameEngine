@@ -71,6 +71,26 @@
                 }
             }
 
+
+            if (round.FirstPlayerPoints<66 &&
+                round.SecondPlayerPoints<66)
+            {
+                var winner = round.LastHandInPlayer;
+                if (winner == PlayerPosition.FirstPlayer)
+                {
+                    this.firstPlayerTotalPoints += 1;
+                    this.firstToPlay = PlayerPosition.SecondPlayer;
+                    return;
+                }
+                else
+                {
+                    this.secondPlayerTotalPoints += 1;
+                    this.firstToPlay = PlayerPosition.FirstPlayer;
+                    return;
+                }
+            }
+
+
             if (round.FirstPlayerPoints > round.SecondPlayerPoints)
             {
                 if (round.SecondPlayerPoints >= 33)

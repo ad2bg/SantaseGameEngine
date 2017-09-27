@@ -7,5 +7,7 @@
         Card GetTrumpCard { get; }
 
         void ChangeTrumpCard(Card newCard);
+
+        int CardsLeft { get; }
     }
 }

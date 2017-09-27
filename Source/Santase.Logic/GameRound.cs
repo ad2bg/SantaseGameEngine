@@ -23,6 +23,8 @@
 
         private BaseRoundState state;
 
+        private PlayerPosition gameClosedBy;
+
 
         public int FirstPlayerPoints => this.firstPlayerPoints;
 
@@ -33,6 +35,8 @@
         public bool SecondPlayerHasHand => this.secondPlayerCollectedCards.Count > 0;
 
         public PlayerPosition ClosedByPlayer => throw new NotImplementedException();
+
+        public PlayerPosition LastHandInPlayer => this.firstToPlay;
 
         public GameRound(IPlayer firstPlayer, IPlayer secondPlayer, PlayerPosition firstToPlay)
         {
@@ -53,6 +57,8 @@
             this.firstToPlay = firstToPlay;
 
             this.SetState(new StartRoundState(this));
+
+            this.gameClosedBy = PlayerPosition.NoOne;
         }
 
 
@@ -72,14 +78,11 @@
 
 
 
-            // TODO: Update points
+            // Update points
             this.UpdatePoints(hand);
-            
-            // TODO: Last 10
-
 
             // Update collected cards
-            if (hand.Winner==PlayerPosition.FirstPlayer)
+            if (hand.Winner == PlayerPosition.FirstPlayer)
             {
                 firstPlayerCollectedCards.Add(hand.FirstPlayerCard);
                 firstPlayerCollectedCards.Add(hand.SecondPlayerCard);
@@ -92,7 +95,23 @@
 
             // Draw new cards
             this.firstToPlay = hand.Winner;
+            this.firstPlayerCards.Remove(hand.FirstPlayerCard);
+            this.secondPlayerCards.Remove(hand.SecondPlayerCard);
+            this.DrawNewCards();
 
+
+            this.state.PlayHand(this.deck.CardsLeft);
+
+            if (hand.GameClosedBy == PlayerPosition.FirstPlayer ||
+                hand.GameClosedBy == PlayerPosition.SecondPlayer)
+            {
+                this.state.Close();
+                this.gameClosedBy = hand.GameClosedBy;
+            }
+        }
+
+        private void DrawNewCards()
+        {
             if (this.state.ShouldDrawCard)
             {
                 if (this.firstToPlay == PlayerPosition.FirstPlayer)
@@ -110,7 +129,7 @@
 
         private void UpdatePoints(IGameHand hand)
         {
-            if (hand.Winner==PlayerPosition.FirstPlayer)
+            if (hand.Winner == PlayerPosition.FirstPlayer)
             {
                 this.firstPlayerPoints += hand.FirstPlayerCard.GetValue();
                 this.firstPlayerPoints += hand.SecondPlayerCard.GetValue();
