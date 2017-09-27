@@ -1,22 +1,26 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Santase.Logic
+﻿namespace Santase.Logic
 {
+    using Santase.Logic.Players;
+
     public class SantaseGame : ISantaseGame
     {
         int firstPlayerTotalPoints;
         int secondPlayerTotalPoints;
         int roundsCount;
 
-        public SantaseGame()
+        private IPlayer firstPlayer;
+        private IPlayer secondPlayer;
+
+        private PlayerPosition firstToPlay;
+
+        public SantaseGame(IPlayer firstPlayer, IPlayer secondPlayer, PlayerPosition firstToPlay)
         {
             this.firstPlayerTotalPoints = 0;
             this.secondPlayerTotalPoints = 0;
             this.roundsCount = 0;
+            this.firstPlayer = firstPlayer;
+            this.secondPlayer = secondPlayer;
+            this.firstToPlay = firstToPlay;
         }
 
         public int FirstPlayerTotalPoints => this.firstPlayerTotalPoints;
@@ -35,19 +39,24 @@ namespace Santase.Logic
 
         private void PlayRound()
         {
-            IGameRound round = new GameRound();
+            IGameRound round = new GameRound(
+                this.firstPlayer, 
+                this.secondPlayer, 
+                this.firstToPlay);
+
             round.Start();
 
-            UpdatePoints(round);
+            this.UpdatePoints(round);
         }
 
         private void UpdatePoints(IGameRound round)
         {
             if (round.ClosedByPlayer == PlayerPosition.FirstPlayer)
             {
-                if (round.FirstPlayerPoints<66)
+                if (round.FirstPlayerPoints < 66)
                 {
                     this.secondPlayerTotalPoints += 3;
+                    this.firstToPlay = PlayerPosition.FirstPlayer; // Note: the next round will be started with the losing player, i.e. FirstPlayer
                     return;
                 }
             }
@@ -57,6 +66,7 @@ namespace Santase.Logic
                 if (round.SecondPlayerPoints < 66)
                 {
                     this.firstPlayerTotalPoints += 3;
+                    this.firstToPlay = PlayerPosition.SecondPlayer; // Note: the next round will be started with the losing player, i.e. SecondPlayer
                     return;
                 }
             }
@@ -66,6 +76,7 @@ namespace Santase.Logic
                 if (round.SecondPlayerPoints >= 33)
                 {
                     this.firstPlayerTotalPoints += 1;
+
                 }
                 else if (round.SecondPlayerHasHand)
                 {
@@ -75,6 +86,7 @@ namespace Santase.Logic
                 {
                     this.firstPlayerTotalPoints += 3;
                 }
+                this.firstToPlay = PlayerPosition.SecondPlayer; // Note: the next round will be started with the losing player, i.e. SecondPlayer
             }
             else if (round.SecondPlayerPoints > round.FirstPlayerPoints)
             {
@@ -90,6 +102,7 @@ namespace Santase.Logic
                 {
                     this.secondPlayerTotalPoints += 3;
                 }
+                this.firstToPlay = PlayerPosition.FirstPlayer; // Note: the next round will be started with the losing player, i.e. FirstPlayer
             }
             else
             {

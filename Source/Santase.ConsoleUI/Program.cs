@@ -7,7 +7,10 @@
     {
         public static void Main()
         {
-            ISantaseGame game = new SantaseGame();
+            ISantaseGame game = new SantaseGame(
+                new ConsolePlayer(6,10),
+                new ConsolePlayer(10,10));
+
             game.Start();
 
 
