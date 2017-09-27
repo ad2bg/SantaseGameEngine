@@ -18,7 +18,7 @@
 
         public override bool ShouldDrawCard => false;
 
-        public override void PlayHand(int cardsLeftInDeck)
+        internal override void PlayHand(int cardsLeftInDeck)
         {
         }
     }
