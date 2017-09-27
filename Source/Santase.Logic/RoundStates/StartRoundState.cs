@@ -4,7 +4,7 @@
 
     public class StartRoundState : BaseRoundState
     {
-        protected StartRoundState(IGameRound round) : base(round)
+        public StartRoundState(IGameRound round) : base(round)
         {
         }
 
