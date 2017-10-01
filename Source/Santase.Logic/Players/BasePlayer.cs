@@ -25,6 +25,10 @@
             PlayerTurnContext context,
             IPlayerActionValidator actionValidator);
 
+        public virtual void EndTurn(PlayerTurnContext context)
+        {
+        }
+
         protected Announce PossibleAnnounce(Card cardToBePlayed, Card trumpCard)
         {
             CardType cardType = cardToBePlayed.Type;

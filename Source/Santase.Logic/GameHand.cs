@@ -13,6 +13,7 @@ namespace Santase.Logic
         private IPlayer secondPlayer;
         private BaseRoundState state;
         private IDeck deck;
+        private IPlayerActionValidator actionValidator;
 
         public GameHand(
             PlayerPosition whoWillPlayFirst,
@@ -26,6 +27,7 @@ namespace Santase.Logic
             this.secondPlayer = secondPlayer;
             this.state = state;
             this.deck = deck;
+            this.actionValidator = new PlayerActionValidator();
         }
 
         public PlayerPosition Winner => throw new System.NotImplementedException();
@@ -56,24 +58,30 @@ namespace Santase.Logic
                 secondToPlay = this.firstPlayer;
             }
 
-            // TODO: Prepare PlayerTurnContext
+            var context = new PlayerTurnContext(this.state, deck.GetTrumpCard, deck.CardsLeft);
 
             PlayerAction firstPlayerAction = null;
             do
             {
-                firstPlayerAction = this.FirstPlayerTurn(firstToPlay);
+                firstPlayerAction = this.FirstPlayerTurn(firstToPlay, context);
+
+                if (!this.actionValidator.IsValid(firstPlayerAction, context))
+                {
+                    // TODO: DO something more graceful.
+                    throw new InternalGameException("Invalid turn!");
+                }
             } while (firstPlayerAction.Type != PlayerActionType.PlayCard);
 
+            context.FirstPlayedCard = firstPlayerAction.Card;
 
-            // TODO: Prepare PlayerTurnContext
             PlayerAction secondPlayerAction = secondToPlay.GetTurn(
                 new PlayerTurnContext(
                     this.state,
                     deck.GetTrumpCard,
                     deck.CardsLeft),
-                new PlayerActionValidator());
+                this.actionValidator); // ??? context ???
 
-
+            context.SecondPlayedCard = secondPlayerAction.Card;
 
             // TODO: if turn == close => close, change state, ask firstToPlay
             // TODO: if turn == trumpChange => change, ask firstToPlay
@@ -83,19 +91,17 @@ namespace Santase.Logic
 
         }
 
+
         /// <summary>
         /// 
         /// </summary>
         /// <param name="player"></param>
         /// <returns>True => played card; False => another action</returns>
-        private PlayerAction FirstPlayerTurn(IPlayer player)
+        private PlayerAction FirstPlayerTurn(
+            IPlayer player,
+            PlayerTurnContext context)
         {
-            var playerTurn = player.GetTurn(
-                new PlayerTurnContext(
-                    this.state,
-                    deck.GetTrumpCard,
-                    deck.CardsLeft),
-                new PlayerActionValidator());
+            var playerTurn = player.GetTurn(context, this.actionValidator);
 
             if (playerTurn.Type == PlayerActionType.CloseGame)
             {
