@@ -21,6 +21,7 @@ namespace Santase.Logic
         private PlayerPosition whoClosedTheGame;
         private Card firstPlayerCard;
         private Card secondPlayerCard;
+        private PlayerPosition winner;
 
         private Announce firstPlayerAnnounce;
         private Announce secondPlayerAnnounce;
@@ -45,7 +46,7 @@ namespace Santase.Logic
             this.whoClosedTheGame = PlayerPosition.NoOne;
         }
 
-        public PlayerPosition Winner => throw new System.NotImplementedException();
+        public PlayerPosition Winner => this.winner;
 
         public Card FirstPlayerCard => this.firstPlayerCard;
 
@@ -113,12 +114,23 @@ namespace Santase.Logic
             firstToPlay.EndTurn(context);
             secondToPlay.EndTurn(context);
 
-            // TODO: if turn == close => close, change state, ask firstToPlay
-            // TODO: if turn == trumpChange => change, ask firstToPlay
+            ICardWinner cardWinner = new CardWinner();
 
 
-            // TODO: determine who wins the hand
-
+            if (firstToPlay == this.firstPlayer)
+            {
+                this.winner = cardWinner.Winner(
+                    firstPlayerAction.Card, 
+                    secondPlayerAction.Card,
+                    this.deck.GetTrumpCard.Suit);
+            }
+            else
+            {
+                this.winner = cardWinner.Winner(
+                    secondPlayerAction.Card, 
+                    firstPlayerAction.Card, 
+                    this.deck.GetTrumpCard.Suit);
+            }
         }
 
 

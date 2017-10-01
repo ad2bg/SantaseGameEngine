@@ -4,6 +4,6 @@
 
     public interface ICardWinner
     {
-        PlayerPosition Winner(Card firstPlayerCard, Card secondPlayerCard);
+        PlayerPosition Winner(Card firstPlayerCard, Card secondPlayerCard, CardSuit trumpSuit);
     }
 }
