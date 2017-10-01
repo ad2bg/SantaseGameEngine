@@ -15,9 +15,9 @@
             this.CardsleftInDeck = cardsLeftInDeck;
         }
 
-        public BaseRoundState State { get; private set; }
+        public BaseRoundState State { get; internal set; }
 
-        public Card TrumpCard { get; private set; }
+        public Card TrumpCard { get; internal set; }
 
         public int CardsleftInDeck { get; private set; }
 

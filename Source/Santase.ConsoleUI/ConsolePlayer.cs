@@ -39,11 +39,11 @@
             {
                 PlayerAction playerAction = null;
 
-                Console.SetCursorPosition(0, this.row + 1);
+                this.ClearRowAndSetCursorPosition(0, this.row + 1);
                 Console.Write(
                     "Turn? [1-{0}]=Card{1} : ",
                     this.cards.Count,
-                    context.AmItheFirstPlayer ? 
+                    context.AmItheFirstPlayer ?
                     ", [T]=Change Trump; [C]=Close" : "");
 
                 var userActionAsString = Console.ReadLine();
@@ -83,9 +83,9 @@
                             // Ask the user whether to announce it
                             while (true)
                             {
-                                Console.SetCursorPosition(0, this.row + 2);
+                                this.ClearRowAndSetCursorPosition(0, this.row + 2);
                                 Console.Write(
-                                    "Announce {0} [Y]/[N]:     ", 
+                                    "Announce {0} [Y]/[N]:     ",
                                     possibleAnnouce.ToString());
 
                                 var userInput = Console.ReadLine();
@@ -140,8 +140,18 @@
                     continue;
                 }
 
-                if (actionValidator.IsValid(playerAction, context))
+                if (actionValidator.IsValid(playerAction, context,this.cards))
                 {
+                    if (playerAction.Type == PlayerActionType.PlayCard)
+                    {
+                        this.cards.Remove(playerAction.Card);
+                    }
+
+                    if (playerAction.Type == PlayerActionType.ChangeTrump)
+                    {
+                        this.cards.Remove(new Card(context.TrumpCard.Suit, CardType.Nine));
+                    }
+
                     this.PrintGameInfo(context);
                     return playerAction;
                 }
@@ -151,6 +161,13 @@
                     continue;
                 }
             }
+        }
+
+        private void ClearRowAndSetCursorPosition(int col, int row)
+        {
+            Console.SetCursorPosition(0, row);
+            Console.WriteLine(new String(' ', Console.WindowWidth - 1));
+            Console.SetCursorPosition(col, row);
         }
 
         private void PrintGameInfo(PlayerTurnContext context)

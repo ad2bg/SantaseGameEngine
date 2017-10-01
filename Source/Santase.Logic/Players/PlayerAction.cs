@@ -18,6 +18,6 @@
 
         public PlayerActionType Type { get; private set; }
 
-        public Announce Announce { get; private set; }
+        public Announce Announce { get; internal set; }
     }
 }

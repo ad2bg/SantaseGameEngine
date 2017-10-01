@@ -97,21 +97,25 @@
                 secondPlayerHasCollectedCards=true;
             }
 
-            // Draw new cards
             this.firstToPlay = hand.Winner;
+
+            // Remove cards
             this.firstPlayerCards.Remove(hand.FirstPlayerCard);
             this.secondPlayerCards.Remove(hand.SecondPlayerCard);
-            this.DrawNewCards();
 
-            // Switch states as necessary
-            this.state.PlayHand(this.deck.CardsLeft);
 
             // Close the game if needed
             if (hand.GameClosedBy == PlayerPosition.FirstPlayer ||
                 hand.GameClosedBy == PlayerPosition.SecondPlayer)
             {
                 this.gameClosedBy = hand.GameClosedBy;
+                this.state.Close();
             }
+
+            // Draw new cards
+            this.DrawNewCards();
+            // Switch states as necessary
+            this.state.PlayHand(this.deck.CardsLeft);
         }
 
         private void DrawNewCards()

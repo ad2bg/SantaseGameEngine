@@ -8,6 +8,11 @@
         {
         }
 
+        public FinalRoundState()
+            : base(null)
+        {
+        }
+
         public override bool CanAnnounce20Or40 => true;
 
         public override bool CanClose => false;

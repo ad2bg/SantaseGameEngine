@@ -1,6 +1,7 @@
 ﻿
 namespace Santase.Logic
 {
+    using System.Collections;
     using System.Collections.Generic;
 
     using Santase.Logic.Cards;
@@ -63,16 +64,22 @@ namespace Santase.Logic
         {
             IPlayer firstToPlay;
             IPlayer secondToPlay;
+            IList<Card> firstToPlayCards;
+            IList<Card> secondToPlayCards;
 
             if (this.whoWillPlayFirst == PlayerPosition.FirstPlayer)
             {
                 firstToPlay = this.firstPlayer;
+                firstToPlayCards = this.firstPlayerCards;
                 secondToPlay = this.secondPlayer;
+                secondToPlayCards = this.secondPlayerCards;
             }
             else
             {
                 firstToPlay = this.secondPlayer;
+                firstToPlayCards = this.secondPlayerCards;
                 secondToPlay = this.firstPlayer;
+                secondToPlayCards = this.firstPlayerCards;
             }
 
             var context = new PlayerTurnContext(this.state, deck.GetTrumpCard, deck.CardsLeft);
@@ -82,7 +89,7 @@ namespace Santase.Logic
             {
                 firstPlayerAction = this.FirstPlayerTurn(firstToPlay, context);
 
-                if (!this.actionValidator.IsValid(firstPlayerAction, context))
+                if (!this.actionValidator.IsValid(firstPlayerAction, context,firstToPlayCards))
                 {
                     // TODO: Do something more graceful.
                     throw new InternalGameException("Invalid turn!");
@@ -91,12 +98,18 @@ namespace Santase.Logic
 
             context.FirstPlayedCard = firstPlayerAction.Card;
 
-            PlayerAction secondPlayerAction = 
-                secondToPlay.GetTurn(context, this.actionValidator); //  new PlayerTurnContext(this.state, deck.GetTrumpCard, deck.CardsLeft) 
+            PlayerAction secondPlayerAction =
+                secondToPlay.GetTurn(context, this.actionValidator);
+
+            if (!this.actionValidator.IsValid(secondPlayerAction, context, secondToPlayCards))
+            {
+                // TODO: Do something more graceful.
+                throw new InternalGameException("Invalid turn!");
+            }
 
             context.SecondPlayedCard = secondPlayerAction.Card;
 
-            if (firstToPlay==this.firstPlayer)
+            if (firstToPlay == this.firstPlayer)
             {
                 this.firstPlayerCard = firstPlayerAction.Card;
                 this.firstPlayerAnnounce = firstPlayerAction.Announce;
@@ -120,15 +133,15 @@ namespace Santase.Logic
             if (firstToPlay == this.firstPlayer)
             {
                 this.winner = cardWinner.Winner(
-                    firstPlayerAction.Card, 
+                    firstPlayerAction.Card,
                     secondPlayerAction.Card,
                     this.deck.GetTrumpCard.Suit);
             }
             else
             {
                 this.winner = cardWinner.Winner(
-                    secondPlayerAction.Card, 
-                    firstPlayerAction.Card, 
+                    secondPlayerAction.Card,
+                    firstPlayerAction.Card,
                     this.deck.GetTrumpCard.Suit);
             }
         }
@@ -148,24 +161,37 @@ namespace Santase.Logic
             if (playerTurn.Type == PlayerActionType.CloseGame)
             {
                 this.state.Close();
-                if (player==this.firstPlayer)
+                context.State = new FinalRoundState();
+                this.state = new FinalRoundState();
+                if (player == this.firstPlayer)
                 {
                     this.whoClosedTheGame = PlayerPosition.FirstPlayer;
                 }
                 else
                 {
                     this.whoClosedTheGame = PlayerPosition.SecondPlayer;
-                }               
+                }
             }
 
             if (playerTurn.Type == PlayerActionType.ChangeTrump)
             {
                 var changeTrump = new Card(this.deck.GetTrumpCard.Suit, CardType.Nine);
                 var oldTrump = this.deck.GetTrumpCard;
+                context.TrumpCard = changeTrump;
                 this.deck.ChangeTrumpCard(changeTrump);
-                this.firstPlayerCards.Remove(changeTrump);
-                this.firstPlayerCards.Add(oldTrump);
-                this.firstPlayer.AddCard(oldTrump);
+
+                if (player == this.firstPlayer)
+                {
+                    this.firstPlayerCards.Remove(changeTrump);
+                    this.firstPlayerCards.Add(oldTrump);
+                    this.firstPlayer.AddCard(oldTrump);
+                }
+                else
+                {
+                    this.secondPlayerCards.Remove(changeTrump);
+                    this.secondPlayerCards.Add(oldTrump);
+                    this.secondPlayer.AddCard(oldTrump);
+                }
             }
 
             return playerTurn;
