@@ -16,8 +16,8 @@
         private int secondPlayerPoints;
         private IList<Card> firstPlayerCards;
         private IList<Card> secondPlayerCards;
-        private IList<Card> firstPlayerCollectedCards;
-        private IList<Card> secondPlayerCollectedCards;
+        private bool firstPlayerHasCollectedCards;
+        private bool secondPlayerHasCollectedCards;
 
         private PlayerPosition firstToPlay;
 
@@ -30,9 +30,9 @@
 
         public int SecondPlayerPoints => this.secondPlayerPoints;
 
-        public bool FirstPlayerHasHand => this.firstPlayerCollectedCards.Count > 0;
+        public bool FirstPlayerHasHand => this.firstPlayerHasCollectedCards;
 
-        public bool SecondPlayerHasHand => this.secondPlayerCollectedCards.Count > 0;
+        public bool SecondPlayerHasHand => this.secondPlayerHasCollectedCards;
 
         public PlayerPosition ClosedByPlayer => this.gameClosedBy;
 
@@ -51,8 +51,8 @@
             this.firstPlayerCards = new List<Card>();
             this.secondPlayerCards = new List<Card>();
 
-            this.firstPlayerCollectedCards = new List<Card>();
-            this.secondPlayerCollectedCards = new List<Card>();
+            this.firstPlayerHasCollectedCards = false;
+            this.secondPlayerHasCollectedCards = false;
 
             this.firstToPlay = firstToPlay;
 
@@ -76,7 +76,9 @@
             IGameHand hand = new GameHand(
                 this.firstToPlay,
                 this.firstPlayer,
+                this.firstPlayerCards,
                 this.secondPlayer,
+                this.secondPlayerCards,
                 this.state,
                 this.deck);
 
@@ -88,13 +90,11 @@
             // Update collected cards
             if (hand.Winner == PlayerPosition.FirstPlayer)
             {
-                firstPlayerCollectedCards.Add(hand.FirstPlayerCard);
-                firstPlayerCollectedCards.Add(hand.SecondPlayerCard);
+                firstPlayerHasCollectedCards=true;
             }
             else
             {
-                secondPlayerCollectedCards.Add(hand.FirstPlayerCard);
-                secondPlayerCollectedCards.Add(hand.SecondPlayerCard);
+                secondPlayerHasCollectedCards=true;
             }
 
             // Draw new cards
@@ -110,7 +110,6 @@
             if (hand.GameClosedBy == PlayerPosition.FirstPlayer ||
                 hand.GameClosedBy == PlayerPosition.SecondPlayer)
             {
-                this.state.Close();
                 this.gameClosedBy = hand.GameClosedBy;
             }
         }
